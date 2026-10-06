@@ -2,7 +2,7 @@
 
 A **production-grade IoT system** that collects environmental data from distributed sensors in real-time and streams it to a live dashboard via WebSocket.
 
-**Tech Stack:** FastAPI, PostgreSQL, React (phase 2), Docker
+**Tech Stack:** FastAPI, PostgreSQL, React 18, Docker
 
 ---
 
@@ -35,19 +35,38 @@ PIR (motion)     ──→ POST /api/hub/data  ──→  Charts
 
 ```
 smart-home-sensor-hub/
-├── main.py                 # FastAPI app (routes, WebSocket)
-├── config.py               # Configuration from environment
-├── database.py             # SQLAlchemy setup & session mgmt
-├── models.py               # ORM models (Sensor, SensorReading)
-├── schemas.py              # Pydantic request/response schemas
-├── crud.py                 # Database operations
-├── sensor_simulator.py     # Generates fake sensor data
-├── requirements.txt        # Python dependencies
-├── .env.example            # Template for environment config
-├── Dockerfile              # Container image spec
-├── docker-compose.yml      # Orchestration (PostgreSQL + FastAPI)
-├── .gitignore              # Git exclude rules
-└── README.md               # This file
+├── Backend (FastAPI)
+│   ├── main.py                 # FastAPI app (routes, WebSocket)
+│   ├── config.py               # Configuration from environment
+│   ├── database.py             # SQLAlchemy setup & session mgmt
+│   ├── models.py               # ORM models (Sensor, SensorReading)
+│   ├── schemas.py              # Pydantic request/response schemas
+│   ├── crud.py                 # Database operations
+│   ├── sensor_simulator.py     # Generates fake sensor data
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env.example            # Template for environment config
+│   ├── Dockerfile              # Container image spec
+│   ├── docker-compose.yml      # Orchestration (PostgreSQL + FastAPI)
+│   └── .gitignore              # Git exclude rules
+│
+├── Frontend (React 18)
+│   └── smart-home-dashboard/
+│       ├── src/
+│       │   ├── components/
+│       │   │   ├── SensorGauge.jsx    # Current reading displays
+│       │   │   └── HistoryChart.jsx   # 24-hour trend charts
+│       │   ├── hooks/
+│       │   │   └── useSensorData.js   # WebSocket + API integration
+│       │   ├── App.js                 # Main application
+│       │   ├── index.js               # React entry point
+│       │   └── index.css              # Global styles
+│       ├── public/
+│       │   └── index.html
+│       ├── package.json
+│       └── README.md
+│
+└── Documentation
+    └── README.md               # This file
 ```
 
 ---
@@ -129,19 +148,37 @@ python sensor_simulator.py
 
 Simulator generates fake DHT22 + PIR data and POSTs to the hub every 5 seconds.
 
-### 6. Verify
+### 6. Start Dashboard (Terminal 4)
 
-Check the API:
+In another terminal:
+
+```bash
+cd smart-home-dashboard
+npm install
+npm start
+```
+
+Dashboard opens at `http://localhost:3000` with real-time updates.
+
+### 7. Verify
+
+Check the API and dashboard:
 
 ```bash
 # Latest readings from all sensors
 curl http://localhost:8000/api/sensors/latest
 
-# Docs (interactive)
-open http://localhost:8000/docs
+# Interactive API docs
+http://localhost:8000/docs
+
+# Live dashboard
+http://localhost:3000
 ```
 
-Should see sensor data flowing in.
+You should see:
+- 🟢 WebSocket connected ("Live" indicator)
+- Current sensor readings in gauges
+- 24-hour historical charts updating in real-time
 
 ---
 
@@ -286,13 +323,21 @@ Adjust to `DEBUG` for verbose output.
 
 ---
 
-## Next Steps
+## Project Phases (Completed)
 
-**Phase 2:** React dashboard with live charts & gauges
+✅ **Phase 1:** Architecture & API design  
+✅ **Phase 2:** Backend implementation (FastAPI, PostgreSQL, WebSocket)  
+✅ **Phase 3:** Sensor simulator with realistic behavior  
+✅ **Phase 4:** React dashboard with live gauges & 24-hour charts  
+✅ **Phase 5:** Documentation & GitHub publication
 
-**Phase 3:** Alerting (temperature out of range, no reading in 30min)
+## Future Enhancements
 
-**Phase 4:** Machine learning (anomaly detection, forecasting)
+- [ ] Alerting (temperature out of range, no reading in 30min)
+- [ ] Machine learning (anomaly detection, forecasting)
+- [ ] Authentication & authorization
+- [ ] Mobile app (React Native)
+- [ ] Metrics dashboard (Prometheus/Grafana)
 
 ---
 
