@@ -10,6 +10,7 @@ from typing import List
 
 from fastapi import FastAPI, Depends, HTTPException, WebSocket, Query
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
 from config import settings
@@ -52,7 +53,7 @@ active_connections: List[WebSocket] = []
 async def startup_event():
     """Initialize on app startup."""
     logger.info("🚀 Smart Home Sensor Hub starting...")
-    logger.info(f"📊 Database: {settings.database_url}")
+    logger.info(f"📊 Database: {make_url(settings.database_url).render_as_string(hide_password=True)}")
     logger.info(f"🌐 Server: http://{settings.host}:{settings.port}")
 
 
